@@ -1,12 +1,11 @@
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-import java.security.cert.TrustAnchor;
 import java.util.Random;
 
 import javax.swing.JPanel;
 
-public class gamePanel extends JPanel implements ActionListener{
+public class GamePanel extends JPanel implements ActionListener{
 
     private static final long serialVersionUID = 1L;
 
@@ -27,7 +26,7 @@ public class gamePanel extends JPanel implements ActionListener{
     Random random;
     Timer timer;
 
-    gamePanel(){
+    GamePanel(){
         random = new Random();
         this.setPreferredSize(new Dimension(WIDTH, HEIGHT));
         this.setBackground(Color.darkGray);
@@ -75,21 +74,23 @@ public class gamePanel extends JPanel implements ActionListener{
 
     public void draw(Graphics graphics){
         if(running){
-            graphics.setColor(Color.orange);
+            graphics.setColor(new Color(220, 20, 60));
             graphics.fillOval(foodX, foodY, UNIT_SIZE, UNIT_SIZE);
 
-            graphics.setColor(Color.red);
+            graphics.setColor(new Color(255, 140, 0));
             graphics.fillRect(x[0], y[0], UNIT_SIZE, UNIT_SIZE);
 
             for (int i = 1; i < length; i++) {
-                graphics.setColor(new Color(40, 200, 150));
+                graphics.setColor(new Color(255, 165, 0 ));
                 graphics.fillRect(x[i], y[i], UNIT_SIZE, UNIT_SIZE);
             }
 
-            graphics.setColor(Color.lightGray);
+            graphics.setColor(new Color(220, 20, 60));
             graphics.setFont(new Font("Snas serif", Font.ROMAN_BASELINE, 25));
             FontMetrics metrics = getFontMetrics(graphics.getFont());
-            graphics.drawString("Score: " + foodEaten, (WIDTH - metrics.stringWidth(("Score: " + foodEaten))/2, graphics.getFont().getSize());
+            int x = WIDTH - metrics.stringWidth("Score: " + foodEaten) - 10;
+            int y = metrics.getHeight();
+            graphics.drawString("Score: " + foodEaten, x, y);
         }else{
             gameOver(graphics);
         }
@@ -100,7 +101,7 @@ public class gamePanel extends JPanel implements ActionListener{
         foodY = random.nextInt((int)(HEIGHT/UNIT_SIZE)) * UNIT_SIZE;
     }
 
-    public void chcekHit(){
+    public void checkHit(){
         for (int i = length; i > 0; i--) {
             if (x[0] == x[i] && y[0] == y[i]){
                 running = false;
@@ -117,21 +118,62 @@ public class gamePanel extends JPanel implements ActionListener{
 
 
     private void gameOver(Graphics graphics) {
-        graphics.setColor(Color.white);
+        graphics.setColor(new Color(220, 20, 60));
         graphics.setFont(new Font("Sans serif", Font.ROMAN_BASELINE, 50));
         FontMetrics metrics = getFontMetrics(graphics.getFont());
-        graphics.drawString("GAME OVER", (WIDTH - metrics.stringWidth("GAME OVER")) / 2, HEIGHT / 2);
+        int x = (WIDTH - metrics.stringWidth("GAME OVER")) / 2;
+        int y = (HEIGHT / 2) - 30;
+        graphics.drawString("GAME OVER", x, y);
 
-        graphics.setColor(Color.red);
-        graphics
+
+        graphics.setColor(new Color(220, 20, 60));
+        graphics.setFont(new Font("Sans serif", Font.ROMAN_BASELINE, 25));
+        metrics = getFontMetrics(graphics.getFont());
+        x = (WIDTH - metrics.stringWidth("Score: " + foodEaten)) / 2;
+        y = (HEIGHT / 2) + metrics.getHeight() + 30;
+        graphics.drawString("Score: " + foodEaten, x, y);
+
     }
 
 
     @Override
     public void actionPerformed(ActionEvent e) {
-
+        if(running){
+            move();
+            chcekFood();
+            checkHit();
+        }
+        repaint();
     }
 
     public class MyKeyAdapter extends KeyAdapter {
+        @Override
+        public void keyPressed(KeyEvent e) {
+            switch (e.getKeyCode()){
+                case KeyEvent.VK_LEFT:
+                    if (direction != 'R'){
+                        direction = 'L';
+                    }
+                    break;
+
+                case KeyEvent.VK_RIGHT:
+                    if(direction != 'L'){
+                        direction = 'R';
+                    }
+                    break;
+
+                case KeyEvent.VK_UP:
+                    if (direction != 'D'){
+                        direction = 'U';
+                    }
+                    break;
+
+                case KeyEvent.VK_DOWN:
+                    if (direction != 'U'){
+                        direction = 'D';
+                    }
+                    break;
+            }
+        }
     }
 }
