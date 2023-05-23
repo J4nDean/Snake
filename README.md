@@ -25,4 +25,4 @@ Gra polega na sterowaniu wężem, który porusza się na planszy. Celem gry jest
 
 Do uruchomienia gry wymagane jest posiadanie zainstalowanego środowiska Java w wersji 8 lub wyższej.
 
-Gra została stworzona pw celach edukacyjnych
+Gra została stworzona w celach edukacyjnych
